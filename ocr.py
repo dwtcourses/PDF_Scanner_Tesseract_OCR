@@ -79,6 +79,8 @@ def convert_pdf(filename, output_path, resolution=300):
         replace it with a white background.
     """
     all_pages = wi(filename=filename, resolution=resolution)
+    output_dir = os.path.join(output_path, os.path.splitext(os.path.basename(filename))[0])
+    os.mkdir(output_dir)
     for i, page in enumerate(all_pages.sequence):
         with wi(page) as img:
             img.format = 'png'
@@ -86,10 +88,15 @@ def convert_pdf(filename, output_path, resolution=300):
             img.alpha_channel = 'remove'
 
             image_filename = os.path.splitext(os.path.basename(filename))[0]
-            image_filename = '{}-{}.png'.format(image_filename, i)
-            image_filename = os.path.join(output_path, image_filename)
-
+            image_filename = '{}_{}.png'.format(image_filename, i)
+            image_filename = os.path.join(output_dir, image_filename)
+            
             img.save(filename=image_filename)
+
+def sort_image_list(images_list):    
+    # Sort the list of images by page 
+    sorted_list = sorted(images_list, key=lambda n : int((n.split('_')[1][:-4])))
+    return sorted_list
 
 '''
 Main function
@@ -98,22 +105,27 @@ def main():
     print("========================== Loading Main method ==========================")
     # Call the parseArgs function to parse user's command line arguments
     args = parseArgs()
-    images = []
     
     # If a pdf file path is given, then we need to use "wand" to convert the pdf into image first 
     if args["pdf"]:
         path_to_pdf = args["pdf"]
         convert_pdf(path_to_pdf, ".\\pdfs\\converted_pdf_images")  # A list of images converted from the input pdf 
-        
-    if args["image"] or (len(images) != 0):
+    
+    images_path = os.path.join(".\\pdfs\\converted_pdf_images", os.path.splitext(os.path.basename(args["pdf"]))[0])           
+    images_list = os.listdir(images_path)
+    images_list_sorted = sort_image_list(images_list)
+    
+    for img_name in images_list_sorted:
+        img_path = os.path.join(images_path, img_name)
         # Load and read image using cv2
-        image, gray = load_img(args["image"])
+        image, gray = load_img(img_path)
         
         # Preprocess the gray image we obtained earlier
         gray_preprocessed = preprocess_img(args.get("preprocess"), gray)
         
         # Store the text extracted from the image
         text_extracted = apply_OCR(gray_preprocessed)
+        print("++++++++++++++++++++++++ End of page ++++++++++++++++++++++++")
         
         # **Optional** Display original image and preprocessed image
         display_imgs(image, gray_preprocessed, args["displayIMGs"])
