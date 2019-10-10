@@ -58,7 +58,6 @@ def apply_OCR(gray_preprocessed):
     # the temporary file
     text = pytesseract.image_to_string(Image.open(filename))
     os.remove(filename)
-    print(text)
     return text
 
 def display_imgs(image, gray_preprocessed, _display):
@@ -80,7 +79,11 @@ def convert_pdf(filename, output_path, resolution=300):
     """
     all_pages = wi(filename=filename, resolution=resolution)
     output_dir = os.path.join(output_path, os.path.splitext(os.path.basename(filename))[0])
-    os.mkdir(output_dir)
+    
+    # Check if an output directory exists, if not then create one. Else continue
+    if os.path.isdir(output_dir) == False:
+        os.mkdir(output_dir)
+        
     for i, page in enumerate(all_pages.sequence):
         with wi(page) as img:
             img.format = 'png'
@@ -115,6 +118,7 @@ def main():
     images_list = os.listdir(images_path)
     images_list_sorted = sort_image_list(images_list)
     
+    text_list = []
     for img_name in images_list_sorted:
         img_path = os.path.join(images_path, img_name)
         # Load and read image using cv2
@@ -125,13 +129,16 @@ def main():
         
         # Store the text extracted from the image
         text_extracted = apply_OCR(gray_preprocessed)
+        print(text_extracted)
+        text_list.append(text_extracted)
         print("++++++++++++++++++++++++ End of page ++++++++++++++++++++++++")
+        print('')
         
         # **Optional** Display original image and preprocessed image
         display_imgs(image, gray_preprocessed, args["displayIMGs"])
     
-    else:
-        print("There is no image file path given.")
+    print(text_list)
+    na.findDates(text_list)
     
 if __name__ == "__main__":
     main()
