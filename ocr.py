@@ -7,7 +7,6 @@ import pytesseract
 import argparse
 import cv2
 import os
-from nlp_analysis import findDates
 
 # Adding tesseract into our path
 pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files (x86)\\Tesseract-OCR\\tesseract.exe'
