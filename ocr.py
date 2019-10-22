@@ -21,7 +21,7 @@ def parseArgs():
     ap = argparse.ArgumentParser()
     ap.add_argument("-i", "--image", default="",
         help="path to input image to be OCR'd")
-    ap.add_argument("-p", "--preprocess", type=str,
+    ap.add_argument("-p", "--preprocess", type=str, default="thresh",
         help="type of preprocessing to be done")
     ap.add_argument("-d", "--displayIMGs", type=str, default="False", 
         help="user could choose to display images(original image and preprocessed image)")
@@ -72,28 +72,25 @@ def dilate_img(gray, kernel_size=(1,1)):
     return dilation
 
 def preprocess_img(preprocess_type, gray):
-    # check to see if we should apply thresholding to preprocess the image
-    if preprocess_type == "thresh":
-        gray_preprocessed = cv2.threshold(gray, 0, 255,
-            cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1]
-
-    # make a check to see if median blurring should be done to remove
-    # noise
-    elif preprocess_type == "blur":
-        gray_preprocessed = cv2.medianBlur(gray, 3)
+    gray_preprocessed = gray
     
     # Perform morphological transformations 
     gray_preprocessed = dilate_img(gray_preprocessed)   # Dilate the grayscaled image after erosion
     gray_preprocessed = erode_img(gray_preprocessed)    # Erode the grayscaled image
     
     # Apply Gaussian blur to smooth out the edges
+    blur = cv2.GaussianBlur(gray_preprocessed, (3, 3), 0)
     
-    
-    return gray_preprocessed
+    # check to see if we should apply thresholding to preprocess the image
+    if preprocess_type == "thresh":
+        blur = cv2.threshold(blur, 0, 255,
+            cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
+        
+    return blur
 
 def apply_OCR(gray_preprocessed):
     # write the grayscale image to disk as a temporary file so we can
-    # apply OCR to it
+    # apply OCR to the input grayscaled image
     filename = "{}.png".format(os.getpid())
     cv2.imwrite(filename, gray_preprocessed)
 
@@ -132,7 +129,7 @@ def convert_pdf(filename, output_path, resolution=400):
     if not os.path.exists(image_file_dir):
         os.mkdir(image_file_dir)
     
-    for i, page in enumerate(all_pages.sequence):
+    for i, page in enumerate(all_pages.sequence, start=1):
         with wi(page) as img:
             img.format = 'png'
             img.background_color = wc('white')
@@ -148,7 +145,7 @@ def save2Txt(filename, page_num, extracted_text, output_path):
     ''' Takes in the extracted text from an image 
 
         Create a subdirectory (text_files) if it does not exist
-        d
+
         Write the extracted text to a text file which has the same name 
         as the correspending page of the PDf
     '''
@@ -189,7 +186,7 @@ def main():
     images_list = os.listdir(images_path)
     images_list_sorted = sort_image_list(images_list)
     
-    for page_num, img_name in enumerate(images_list_sorted):
+    for page_num, img_name in enumerate(images_list_sorted, start=1):
         print(f"++++++++++++++++++++++++ page {page_num} ++++++++++++++++++++++++")
         
         img_path = os.path.join(images_path, img_name)
