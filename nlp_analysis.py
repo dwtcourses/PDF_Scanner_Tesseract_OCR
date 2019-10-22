@@ -33,7 +33,7 @@ text_files_dir = os.path.join(pdf_file_dir, "text_files")
 text_files = os.listdir(text_files_dir)
 text_files = sort_file_list(text_files)
 
-input_file_path = os.path.join(text_files_dir, text_files[2])
+input_file_path = os.path.join(text_files_dir, text_files[4])
 ent_list = findEnts(input_file_path)
 
 for ent_tup in ent_list:

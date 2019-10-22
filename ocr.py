@@ -7,6 +7,7 @@ import pytesseract
 import argparse
 import cv2
 import os
+import numpy as np
 
 # Adding tesseract into our path
 pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files (x86)\\Tesseract-OCR\\tesseract.exe'
@@ -20,7 +21,7 @@ def parseArgs():
     ap = argparse.ArgumentParser()
     ap.add_argument("-i", "--image", default="",
         help="path to input image to be OCR'd")
-    ap.add_argument("-p", "--preprocess", type=str, default="thresh",
+    ap.add_argument("-p", "--preprocess", type=str,
         help="type of preprocessing to be done")
     ap.add_argument("-d", "--displayIMGs", type=str, default="False", 
         help="user could choose to display images(original image and preprocessed image)")
@@ -36,9 +37,42 @@ def load_img(path_to_img):
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     return image, gray
 
+def erode_img(gray, kernel_size=(1,1)):
+    ''' Erosion - A type of Morphological Transformation
+    
+        erode_img(gray): The basic idea of erosion is just like soil erosion only, 
+        it erodes away the boundaries of foreground object (Always try to keep foreground in white).
+        
+        The kernel slides through the image (as in 2D convolution). 
+        A pixel in the original image (either 1 or 0) will be considered 1 only if all the pixels under the kernel is 1, 
+        otherwise it is eroded (made to zero).
+        
+        Finally, all the pixels near boundary will be discarded depending upon the size of kernel. 
+        So the thickness or size of the foreground object decreases or simply white region decreases in the image. 
+        It is useful for removing small white noises, detach two connected objects etc.
+    '''
+    kernel = np.ones(kernel_size, np.uint8) 
+    erosion = cv2.erode(gray, kernel, iterations=1)
+    return erosion
+    
+def dilate_img(gray, kernel_size=(1,1)):
+    ''' Dilation - A type of Morphological Transformation
+
+        dilate_img(gray): It is just the opposite of erosion. 
+        Here, a pixel element is ‘1’ if atleast one pixel under the kernel is ‘1’.
+        So it increases the white region in the image or size of foreground object increases.
+         
+        Normally, in cases like noise removal, erosion is followed by dilation. 
+        Because, erosion removes white noises, but it also shrinks our object. 
+        So we dilate it. Since noise is gone, they won’t come back, but our object area increases. 
+        It is also useful in joining broken parts of an object.
+    '''
+    kernel = np.ones(kernel_size, np.uint8) 
+    dilation = cv2.dilate(gray, kernel, iterations=1)
+    return dilation
+
 def preprocess_img(preprocess_type, gray):
-    # check to see if we should apply thresholding to preprocess the
-    # image
+    # check to see if we should apply thresholding to preprocess the image
     if preprocess_type == "thresh":
         gray_preprocessed = cv2.threshold(gray, 0, 255,
             cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1]
@@ -47,6 +81,13 @@ def preprocess_img(preprocess_type, gray):
     # noise
     elif preprocess_type == "blur":
         gray_preprocessed = cv2.medianBlur(gray, 3)
+    
+    # Perform morphological transformations 
+    gray_preprocessed = dilate_img(gray_preprocessed)   # Dilate the grayscaled image after erosion
+    gray_preprocessed = erode_img(gray_preprocessed)    # Erode the grayscaled image
+    
+    # Apply Gaussian blur to smooth out the edges
+    
     
     return gray_preprocessed
 
@@ -70,7 +111,7 @@ def display_imgs(image, gray_preprocessed, _display):
         cv2.waitKey(0)
         cv2.destroyAllWindows()
    
-def convert_pdf(filename, output_path, resolution=300):
+def convert_pdf(filename, output_path, resolution=400):
     """ Convert a PDF into images.
 
         All the pages will give a single png file with format:
@@ -83,12 +124,12 @@ def convert_pdf(filename, output_path, resolution=300):
     output_dir = os.path.join(output_path, os.path.splitext(os.path.basename(filename))[0])
     
     # Check if an output directory exists, if not then create one. Else continue
-    if os.path.isdir(output_dir) == False:
+    if not os.path.exists(output_dir):
         os.mkdir(output_dir)
     
     image_file_dir = os.path.join(output_dir, "image_files")
     # Check if the sub directory (image_files) exists, if not then create one. Else continue
-    if os.path.isdir(image_file_dir) == False:
+    if not os.path.exists(image_file_dir):
         os.mkdir(image_file_dir)
     
     for i, page in enumerate(all_pages.sequence):
@@ -104,11 +145,18 @@ def convert_pdf(filename, output_path, resolution=300):
             img.save(filename=image_filename)
 
 def save2Txt(filename, page_num, extracted_text, output_path):
+    ''' Takes in the extracted text from an image 
+
+        Create a subdirectory (text_files) if it does not exist
+        d
+        Write the extracted text to a text file which has the same name 
+        as the correspending page of the PDf
+    '''
     output_dir = os.path.join(output_path, os.path.splitext(os.path.basename(filename))[0])
     text_file_dir = os.path.join(output_dir, "text_files")
     
     # Check if the sub directory (text_files) exists, if not then create one. Else continue
-    if os.path.isdir(text_file_dir) == False:
+    if not os.path.exists(text_file_dir):
         os.mkdir(text_file_dir)
     
     text_filename = os.path.splitext(os.path.basename(filename))[0]
@@ -149,7 +197,7 @@ def main():
         image, gray = load_img(img_path)
         
         # Preprocess the gray image we obtained earlier
-        gray_preprocessed = preprocess_img(args.get("preprocess"), gray)
+        gray_preprocessed = preprocess_img(args["preprocess"], gray)
         
         # Store the text extracted from the image
         text_extracted = apply_OCR(gray_preprocessed)
