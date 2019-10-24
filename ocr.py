@@ -82,12 +82,10 @@ def preprocess_img(filename, output_path, page_num, preprocess_type, gray):
             gray: The actual image (grayscaled) object we want to preprocess. The image is stored as numpy.array.
             
         Returns:
-                preprocessed_img: The preprocessed image object, and it can be passed to the next step, which is to apply OCR on it and extract text/content from it.
+            preprocessed_img: The preprocessed image object, and it can be passed to the next step, which is to apply OCR on it and extract text/content from it.
     '''
-    gray_preprocessed = gray
-    
     # Perform morphological transformations 
-    gray_preprocessed = dilate_img(gray_preprocessed)   # Dilate the grayscaled image after erosion
+    gray_preprocessed = dilate_img(gray)   # Dilate the grayscaled image after erosion
     gray_preprocessed = erode_img(gray_preprocessed)    # Erode the grayscaled image
     
     # Apply Gaussian blur to smooth out the edges
@@ -107,7 +105,7 @@ def preprocess_img(filename, output_path, page_num, preprocess_type, gray):
         os.mkdir(preprocessed_img_dir)
     
     original_img_filename = os.path.splitext(os.path.basename(filename))[0]
-    img_filename = "{}_{}.png".format(original_img_filename, page_num)
+    img_filename = "{}_{}.png".format(original_img_filename + "_preprocessed", page_num)
     preprocessed_img_path = os.path.join(preprocessed_img_dir, img_filename)    
     cv2.imwrite(preprocessed_img_path, preprocessed_img)
     
