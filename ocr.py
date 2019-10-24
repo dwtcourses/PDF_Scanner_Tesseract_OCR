@@ -68,10 +68,22 @@ def dilate_img(gray, kernel_size=(1,1)):
         It is also useful in joining broken parts of an object.
     '''
     kernel = np.ones(kernel_size, np.uint8) 
-    dilation = cv2.dilate(gray, kernel, iterations=1)
+    dilation = cv2.dilate(gray, kernel, iterations=2)
     return dilation
 
-def preprocess_img(preprocess_type, gray):
+def preprocess_img(filename, output_path, page_num, preprocess_type, gray):
+    ''' A function to preprocess images converted from a PDF
+    
+        Args: 
+            filename: The filename of the image to be preprocessed. (eg. 190916-VARSWAP-BARCLAYS-582619_1.png) 
+            output_path: The output directory where we would like to store the preprocessed image in.
+            page_num: The corresponding page number of the image that refers to the original PDF.
+            preprocess_type: By default it's set to Otsu's Threshold.
+            gray: The actual image (grayscaled) object we want to preprocess. The image is stored as numpy.array.
+            
+        Returns:
+                preprocessed_img: The preprocessed image object, and it can be passed to the next step, which is to apply OCR on it and extract text/content from it.
+    '''
     gray_preprocessed = gray
     
     # Perform morphological transformations 
@@ -83,10 +95,23 @@ def preprocess_img(preprocess_type, gray):
     
     # check to see if we should apply thresholding to preprocess the image
     if preprocess_type == "thresh":
-        blur = cv2.threshold(blur, 0, 255,
+        preprocessed_img = cv2.threshold(blur, 0, 255,
             cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
-        
-    return blur
+    
+    # Saving the preprocessed image
+    output_dir = os.path.join(output_path, os.path.splitext(os.path.basename(filename))[0])
+    preprocessed_img_dir = os.path.join(output_dir, "preprocessed_image_files")
+    
+    # Check if the sub directory (preprocessed_image_files) exists, if not then create one. Else continue
+    if not os.path.exists(preprocessed_img_dir):
+        os.mkdir(preprocessed_img_dir)
+    
+    original_img_filename = os.path.splitext(os.path.basename(filename))[0]
+    img_filename = "{}_{}.png".format(original_img_filename, page_num)
+    preprocessed_img_path = os.path.join(preprocessed_img_dir, img_filename)    
+    cv2.imwrite(preprocessed_img_path, preprocessed_img)
+    
+    return preprocessed_img
 
 def apply_OCR(gray_preprocessed):
     # write the grayscale image to disk as a temporary file so we can
@@ -108,7 +133,7 @@ def display_imgs(image, gray_preprocessed, _display):
         cv2.waitKey(0)
         cv2.destroyAllWindows()
    
-def convert_pdf(filename, output_path, resolution=400):
+def convert_pdf(filename, output_path, resolution=300):
     """ Convert a PDF into images.
 
         All the pages will give a single png file with format:
@@ -160,7 +185,7 @@ def save2Txt(filename, page_num, extracted_text, output_path):
     text_filename = "{}_{}.txt".format(text_filename, page_num)
     textFile_path = os.path.join(text_file_dir, text_filename)
     
-    with open(textFile_path, 'a+') as txtFile:
+    with open(textFile_path, 'w') as txtFile:
         txtFile.write(extracted_text)
 
 def sort_image_list(images_list):    
@@ -187,14 +212,14 @@ def main():
     images_list_sorted = sort_image_list(images_list)
     
     for page_num, img_name in enumerate(images_list_sorted, start=1):
-        print(f"++++++++++++++++++++++++ page {page_num} ++++++++++++++++++++++++")
+        print(f"++++++++++++++++++++++++++++++ page {page_num} ++++++++++++++++++++++++++++++")
         
         img_path = os.path.join(images_path, img_name)
         # Load and read image using cv2
         image, gray = load_img(img_path)
         
         # Preprocess the gray image we obtained earlier
-        gray_preprocessed = preprocess_img(args["preprocess"], gray)
+        gray_preprocessed = preprocess_img(args["pdf"], CONVERTED_PDF_IMAGE_DIR, page_num, args["preprocess"], gray)
         
         # Store the text extracted from the image
         text_extracted = apply_OCR(gray_preprocessed)

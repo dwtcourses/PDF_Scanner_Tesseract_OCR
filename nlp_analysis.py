@@ -66,19 +66,5 @@ with open(input_file_path) as textFile:
     clean_text(text)
 
 
-# # Testing NLTK  
-# with open(input_file_path) as textFile:
-#     text = textFile.read()
-    
-#     tokenized = word_tokenize(text)
-#     # print(tokenized)
-#     stop_words = set(stopwords.words('english'))
-    
-#     filtered_sentence = [w for w in tokenized if not w in stop_words]    
-#     tagged = nltk.pos_tag(filtered_sentence[40:70]) 
-#     print(tagged)
-    
-#     namedEnt = nltk.ne_chunk(tagged)
-#     namedEnt.draw()
 
     
