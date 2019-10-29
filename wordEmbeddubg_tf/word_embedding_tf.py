@@ -26,6 +26,30 @@ def decode_review(text):
 # print(decode_review(test_data[0]))
 # print(len(test_data[0]), len(test_data[1]))
 
+def review_encode(s):
+    encoded = [1]
+
+    for word in s:
+        if word.lower() in word_index:
+            encoded.append(word_index[word.lower()])
+        else:
+            encoded.append(2)   # Unknown word -> Unknown tag
+    
+    return encoded
+
+model = keras.models.load_model("model.h5")
+
+with open("review.txt", encoding="utf-8") as f:
+	for line in f.readlines():
+		nline = line.replace(",", "").replace(".", "").replace("(", "").replace(")", "").replace(":", "").replace("\"","").strip().split(" ")
+		encode = review_encode(nline)
+		encode = keras.preprocessing.sequence.pad_sequences([encode], value=word_index["<PAD>"], padding="post", maxlen=250) # make the data 250 words long
+		predict = model.predict(encode)
+		print(line)
+		print(encode)
+		print(predict[0])
+  
+      
 '''
 # model 
 model = keras.Sequential()
@@ -50,14 +74,15 @@ results = model.evaluate(test_data, test_labels)
 # Print results
 print(results)
 
-# test_review = test_data[0]
-# predict = model.predict([test_review])
-# print("Review: ")
-# print(decode_review(test_review))
-# print(f"Prediction: {predict[0]}")
-# print(f"Actual: {test_labels[0]}")
-# print(results)
+test_review = test_data[0]
+predict = model.predict([test_review])
+print("Review: ")
+print(decode_review(test_review))
+print(f"Prediction: {predict[0]}")
+print(f"Actual: {test_labels[0]}")
+print(results)
 
 # Save the model
 model.save("model.h5")
 '''
+
