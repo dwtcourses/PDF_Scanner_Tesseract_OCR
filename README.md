@@ -65,9 +65,9 @@ In the beginning, without any preprocessing on the input files, my program is ab
 
 Note: for electronically generated PDFs, the accuracy is ~100%.
 
-THAT’S NOT GOOD ENOUGH! `:rage:`
+THAT’S NOT GOOD ENOUGH! :rage:
 
-![trash_data](https://user-images.githubusercontent.com/30438439/67975104-e8036880-fbe9-11e9-98d3-edf7290a888f.jpeg)
+<!-- ![trash_data](https://user-images.githubusercontent.com/30438439/67975104-e8036880-fbe9-11e9-98d3-edf7290a888f.jpeg) -->
 
 ---
 
@@ -79,7 +79,7 @@ I will give a brief overview of how my program works below.
 
 ## Program pipeline:
 
-1. Execute the python file (ocr.py)
+1. Execute the python file *ocr.py*
 2. Pass in the PDF filename under the flag *--pdf*
 3. In this case, I am passing in a PDF file called *sample.pdf* which is located in the directoy called *pdf* (this is optional)
 
@@ -87,6 +87,58 @@ I will give a brief overview of how my program works below.
 python .\ocr.py --pdf .\pdfs\sample.pdf
 ```
 
-4. The program will automatically creates a folder, which named the same as the original PDF filename, under the “pdfs/converted_pdf_images” directory.
+4. The program will automatically creates a folder, which named the same as the input PDF filename, under the “pdfs/converted_pdf_images” directory.
+
+Display the structure of the directories for clarification by using the command below:
+
+```bash
+cd \PATH-TO-ocr.py\pdfs\converted_pdf_images
+tree pdfs
+```
+<img width="400" alt="ee_sample" src="https://user-images.githubusercontent.com/30438439/68143236-09709700-feff-11e9-8083-58a1760548e1.PNG">
 
 
+5. The program will then convert the input PDF page-by-page into two .png files (original, preprocessed), a .txt file, correspondingly.
+
+<img width="169" alt="dir_sample" src="https://user-images.githubusercontent.com/30438439/68143685-fa3e1900-feff-11e9-8514-9b724f754ced.PNG">
+
+## Program pipeline – Noise removal
+
+#### Preprocessing: Morphological Transformations
+
+* Simple operations based on the image shape.
+
+* It is normally performed on binary images. It needs two inputs, one is our original image, second one is called structuring element or **kernel** which decides the nature of operation. 
+
+* Depending on the font size, we might want to adjust the size of the kernel.
+
+* Two basic morphological operators are **Erosion** and **Dilation**.
+
+---
+#### Erosion:
+
+* The basic idea of erosion is just like soil erosion only, it erodes away the boundaries of foreground object (Always try to keep foreground in white). 
+
+* The kernel slides through the image (as in 2D convolution). A pixel in the original image (either 1 or 0) will be considered 1 only if all the pixels under the kernel is 1, otherwise it is eroded (made to zero).
+
+* In short, all the pixels near boundary will be discarded depending upon the size of kernel. So the thickness or size of the foreground object decreases or simply white region decreases in the image. 
+
+* It is useful for removing small white noises, detach two connected objects etc.
+
+<img width="450" alt="transform-erosion" src="https://user-images.githubusercontent.com/30438439/68144256-4178d980-ff01-11e9-9794-c84d8481050a.PNG">
+
+---
+#### Dilation:
+
+* Opposite of erosion
+
+* Here, a pixel element is ‘1’ if at least one pixel under the kernel is ‘1’. 
+
+* It increases the white region in the image or size of foreground object increases. Normally, in cases like noise removal, erosion is followed by dilation. 
+
+* Useful in joining broken parts of an object.
+
+<img width="450" alt="transform-dilation" src="https://user-images.githubusercontent.com/30438439/68144785-5b66ec00-ff02-11e9-9a08-c0558597bd1e.PNG">
+
+
+#### Opening:
