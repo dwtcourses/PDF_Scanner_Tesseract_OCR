@@ -207,8 +207,9 @@ tree pdfs
 ## Program pipeline – Output (sample.pdf)
 
 
-<img width="700" alt="output" src="https://user-images.githubusercontent.com/30438439/68221778-f8d02780-ffb7-11e9-9eb6-0f063878ef0c.PNG">
-
+| <img width="700" alt="output" src="https://user-images.githubusercontent.com/30438439/68221778-f8d02780-ffb7-11e9-9eb6-0f063878ef0c.PNG"> |
+| :--: |
+| Original image  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; Preprocessed image |
 
 --- 
 
