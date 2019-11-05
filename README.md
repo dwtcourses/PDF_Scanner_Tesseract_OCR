@@ -20,9 +20,9 @@ Before working on the NLP analysis part. We first need to implement a python scr
 Originally, I had attempted to use various PDF parsers, libraries like: 
 
 
-1. PyPDF2: a pure-python library that is built as a PDF toolkit, capable of extracting document information (title, author, …), splitting documents page by page, merging documents page by page, cropping pages, etc.
+1. [PyPDF2](https://pythonhosted.org/PyPDF2/): a pure-python library that is built as a PDF toolkit, capable of extracting document information (title, author, …), splitting documents page by page, merging documents page by page, cropping pages, etc.
 
-2. Tika-python: A Python port of the Apache Tika library that makes Tika available using the Tika REST Server.
+2. [Tika-python](https://github.com/chrismattmann/tika-python): A Python port of the Apache Tika library that makes Tika available using the Tika REST Server.
 
 However, all of the modules listed above won’t suit our use cases. Due to the fact that most of our input PDF files are generated from scanned documents instead of generated electronically.
 
