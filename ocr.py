@@ -154,12 +154,12 @@ def convert_pdf(filename, output_path, resolution=300):
     
     for i, page in enumerate(all_pages.sequence, start=1):
         with wi(page) as img:
-            img.format = 'png'
-            img.background_color = wc('white')
-            img.alpha_channel = 'remove'
+            img.format = "png"
+            img.background_color = wc("white")
+            img.alpha_channel = "remove"
 
             image_filename = os.path.splitext(os.path.basename(filename))[0]
-            image_filename = '{}_{}.png'.format(image_filename, i)
+            image_filename = f"{image_filename}_{i}.png"
             image_filename = os.path.join(image_file_dir, image_filename)
             
             img.save(filename=image_filename)
@@ -180,7 +180,7 @@ def save2Txt(filename, page_num, extracted_text, output_path):
         os.mkdir(text_file_dir)
     
     text_filename = os.path.splitext(os.path.basename(filename))[0]
-    text_filename = "{}_{}.txt".format(text_filename, page_num)
+    text_filename = f"{text_filename}_{page_num}.txt"
     textFile_path = os.path.join(text_file_dir, text_filename)
     
     with open(textFile_path, 'w') as txtFile:

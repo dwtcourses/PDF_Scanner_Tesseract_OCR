@@ -1,5 +1,5 @@
-# PDF_Scanner_Tesseract_OCR
-NLP Project at PSP Investments
+# PDF Scanner Tesseract OCR
+> Natural Language Processing Internship Project at PSP Investments
 
 ## Project Goals:
 
@@ -32,7 +32,7 @@ However, all of the modules listed above won’t suit our use cases. Due to the 
 
 A solution would be instead of treating our input PDF files as traditional PDF files (electronically generated), we treat them as images (JPEG, PNG, etc.), and perform text detection on them.
 
-![pdf-to-image](https://user-images.githubusercontent.com/30438439/67973504-0025b880-fbe7-11e9-9ff5-f7e9c865fd2c.png)
+<img width="400" alt="ee_sample" src="https://user-images.githubusercontent.com/30438439/67973504-0025b880-fbe7-11e9-9ff5-f7e9c865fd2c.png">
 
 
 ## Drawbacks:
@@ -41,7 +41,7 @@ Yet, there are some limitations to this method, the accuracy of the text extract
 
 ## Tesseract OCR – developed by google 
 
-![google_ocr](https://user-images.githubusercontent.com/30438439/67974412-c8b80b80-fbe8-11e9-8de5-d9f7ec2a5b27.png)
+<img width="350" alt="google_tesseract" src="https://user-images.githubusercontent.com/30438439/67974412-c8b80b80-fbe8-11e9-8de5-d9f7ec2a5b27.png">
 
 * Tesseract is an optical character recognition engine for various operating systems. 
 
@@ -51,7 +51,8 @@ Yet, there are some limitations to this method, the accuracy of the text extract
 
 
 ## Pytesseract
-![tesseract_header](https://user-images.githubusercontent.com/30438439/67974538-0157e500-fbe9-11e9-814b-04a67fd79208.jpg)
+
+<img width="400" alt="pytesseract" src="https://user-images.githubusercontent.com/30438439/67974538-0157e500-fbe9-11e9-814b-04a67fd79208.jpg">
 
 * At the moment, I am using a library called pytesseract. 
 
@@ -67,7 +68,7 @@ Note: for electronically generated PDFs, the accuracy is ~100%.
 
 THAT’S NOT GOOD ENOUGH! :rage:
 
-<!-- ![trash_data](https://user-images.githubusercontent.com/30438439/67975104-e8036880-fbe9-11e9-98d3-edf7290a888f.jpeg) -->
+<img width="250" alt="trash_data" src="https://user-images.githubusercontent.com/30438439/67975104-e8036880-fbe9-11e9-98d3-edf7290a888f.jpeg">
 
 ---
 
@@ -95,12 +96,18 @@ Display the structure of the directories for clarification by using the command 
 cd \PATH-TO-ocr.py\pdfs\converted_pdf_images
 tree pdfs
 ```
-<img width="400" alt="ee_sample" src="https://user-images.githubusercontent.com/30438439/68143236-09709700-feff-11e9-8083-58a1760548e1.PNG">
+<img width="700" alt="ee_sample" src="https://user-images.githubusercontent.com/30438439/68143236-09709700-feff-11e9-8083-58a1760548e1.PNG">
 
 
 5. The program will then convert the input PDF page-by-page into two .png files (original, preprocessed), a .txt file, correspondingly.
 
-<img width="169" alt="dir_sample" src="https://user-images.githubusercontent.com/30438439/68143685-fa3e1900-feff-11e9-8514-9b724f754ced.PNG">
+<img width="300" alt="dir_sample" src="https://user-images.githubusercontent.com/30438439/68143685-fa3e1900-feff-11e9-8514-9b724f754ced.PNG">
+
+#### PDF -> Image (.png, .jpeg, etc.)
+
+> The conversion is done by the use of a library called [Wand](http://docs.wand-py.org/en/0.5.7/). It is a [ctypes-based](https://docs.python.org/3/library/ctypes.html#module-ctypes) simple [ImageMagick](https://imagemagick.org/index.php) binding for Python.
+
+---
 
 ## Program pipeline – Noise removal
 
@@ -121,11 +128,11 @@ tree pdfs
 
 * The kernel slides through the image (as in 2D convolution). A pixel in the original image (either 1 or 0) will be considered 1 only if all the pixels under the kernel is 1, otherwise it is eroded (made to zero).
 
-* In short, all the pixels near boundary will be discarded depending upon the size of kernel. So the thickness or size of the foreground object decreases or simply white region decreases in the image. 
+* In short, all the pixels near boundary will be discarded depending upon the size of kernel. So the thickness or size of the foreground object decreases or simply white region decreases in the image.
 
 * It is useful for removing small white noises, detach two connected objects etc.
 
-<img width="450" alt="transform-erosion" src="https://user-images.githubusercontent.com/30438439/68144256-4178d980-ff01-11e9-9794-c84d8481050a.PNG">
+<img width="400" alt="transform-erosion" src="https://user-images.githubusercontent.com/30438439/68144256-4178d980-ff01-11e9-9794-c84d8481050a.PNG">
 
 ---
 #### Dilation:
@@ -138,7 +145,74 @@ tree pdfs
 
 * Useful in joining broken parts of an object.
 
-<img width="450" alt="transform-dilation" src="https://user-images.githubusercontent.com/30438439/68144785-5b66ec00-ff02-11e9-9a08-c0558597bd1e.PNG">
+<img width="400" alt="transform-dilation" src="https://user-images.githubusercontent.com/30438439/68144785-5b66ec00-ff02-11e9-9a08-c0558597bd1e.PNG">
 
+---
 
 #### Opening:
+
+* Opening is just another name of **erosion** followed by **dilation**. It is useful in removing noise, as mentioned previously. 
+
+<img width="400" alt="opening" src="https://user-images.githubusercontent.com/30438439/68214407-6590f500-ffab-11e9-81b0-8e9d4323e1dc.png">
+
+---
+
+#### Closing:
+
+* Closing is the opposite of Opening, __dilation__ followed by __erosion__. 
+
+* It is useful in closing small holes inside the foreground objects, or small black points on the object.
+
+* In our case, Closing yielded a better result than Opening. 
+
+<img width="400" alt="opening" src="https://user-images.githubusercontent.com/30438439/68216679-472cf880-ffaf-11e9-8084-c755a3825f3a.png">
+
+---
+
+## Program pipeline – Edge-preserving smoothing
+
+> Image blurring is usually achieved by convolving the image with a low-pass filter kernel. In order to blur the image or to remove noise.
+
+
+#### Averaging: 
+
+* After convolving an image with a normalized box filter, this simply takes the average of all the pixels under the kernel area and replaces the central element. 
+
+#### Gaussian bluring:
+
+* This works in a similar fashion to **Averaging**, but it uses Gaussian kernel, instead of a normalized box filter, for convolution. 
+
+* Here, the dimensions of the kernel and standard deviations in both directions can be determined independently. 
+
+* Gaussian blurring is very useful for removing gaussian noise from the image. 
+
+* On the contrary, gaussian blurring does not preserve the edges in the input.
+
+<img width="400" alt="G-Blur" src="https://user-images.githubusercontent.com/30438439/68219370-e227d180-ffb3-11e9-8c52-485f78dfbd9c.jpg">
+
+--- 
+
+## Program pipeline – Binarization
+
+> For a computer, all inputs eventually boils down to 1’s and 0’s. Thus, converting images to black and white immensely helps Tesseract recognize characters. However, this might fail if the input documents lack contrast or have a slightly darker background.
+
+#### Otsu’s Threshold: 
+
+* This method particularly works well with bimodal images, which is an image whose histogram has two peaks. If this is the case, we might be keen on picking a threshold value between these peaks.
+
+<img width="5000" alt="otsu" src="https://user-images.githubusercontent.com/30438439/68220131-2e274600-ffb5-11e9-97cb-b674b22e0780.PNG">
+
+---
+
+## Program pipeline – Output (sample.pdf)
+
+
+<img width="700" alt="output" src="https://user-images.githubusercontent.com/30438439/68221778-f8d02780-ffb7-11e9-9eb6-0f063878ef0c.PNG">
+
+
+--- 
+
+## Program pipeline – Entity extractions
+
+In progress 
+
