@@ -1,6 +1,33 @@
 # PDF Scanner Tesseract OCR
 > Natural Language Processing Internship Project at PSP Investments
 
+### Table content: 
+
+*  [Project Goals](#project-goals)
+* [Business values](#business-values)
+* [Approaches](#approaches)
+    1. [PyPDF2](#1.-pypdf2)
+    2. [Tika-python](#2.-tika-python)
+* [Solution](#solution)
+* [Drawbacks](#drawbacks)
+* [Tesseract OCR – developed by google](#tesseract-ocr)
+* [Pytesseract](#pytesseract)
+* [Program overview](#program-overview)
+* [Preprocessing input PDFs](#preprocessing-input-pdfs)
+* [Program pipeline](#program-pipeline)
+    1. [Noise removal](#noise-removal)
+        + [Erosion](#erosion)
+        + [Dilation](#dilation)
+        + [Opening](#opening)
+        + [Closing](#closing)
+    2. [Edge-preserving smoothing](#edge-preserving-smoothing)
+        + [Averaging](#averaging)
+        + [Gaussian blurring](#gaussian-blurring)
+    3. [Binarization](#binarization)
+        + [Otsu's threshold](#otsu's-threshold)
+    4. [Output (sample.pdf)](#output-(sample.pdf))
+* [Named Entity Recognition (NER)](#named-entity-recognition-(ner))
+
 ## Project Goals:
 
 - **Entities extractions:** Getting useful information (such as People, Date, Location, Organizations, etc.) from raw data stored in PDFs.
@@ -20,15 +47,19 @@ Before working on the NLP analysis part. We first need to implement a python scr
 Originally, I had attempted to use various PDF parsers, libraries like: 
 
 
-1. [PyPDF2](https://pythonhosted.org/PyPDF2/): a pure-python library that is built as a PDF toolkit, capable of extracting document information (title, author, …), splitting documents page by page, merging documents page by page, cropping pages, etc.
+### 1. [PyPDF2](https://pythonhosted.org/PyPDF2/): 
 
-2. [Tika-python](https://github.com/chrismattmann/tika-python): A Python port of the Apache Tika library that makes Tika available using the Tika REST Server.
+A pure-python library that is built as a PDF toolkit, capable of extracting document information (title, author, …), splitting documents page by page, merging documents page by page, cropping pages, etc.
+
+### 2. [Tika-python](https://github.com/chrismattmann/tika-python): 
+
+A Python port of the Apache Tika library that makes Tika available using the Tika REST Server.
 
 However, all of the modules listed above won’t suit our use cases. Due to the fact that most of our input PDF files are generated from scanned documents instead of generated electronically.
 
 ---
 
-## Solutions:
+## Solution:
 
 A solution would be instead of treating our input PDF files as traditional PDF files (electronically generated), we treat them as images (JPEG, PNG, etc.), and perform text detection on them.
 
@@ -39,7 +70,7 @@ A solution would be instead of treating our input PDF files as traditional PDF f
 Yet, there are some limitations to this method, the accuracy of the text extraction varies depending on the quality of the images. In order to improve the performance of our program, we may be required to train a custom machine learning model (a format specifically for PSP’s documents).
 
 
-## Tesseract OCR – developed by google 
+## Tesseract OCR
 
 <img width="350" alt="google_tesseract" src="https://user-images.githubusercontent.com/30438439/67974412-c8b80b80-fbe8-11e9-8de5-d9f7ec2a5b27.png">
 
@@ -61,7 +92,7 @@ Yet, there are some limitations to this method, the accuracy of the text extract
 * Python-tesseract is a wrapper for Google's Tesseract-OCR Engine.
 
 
-## Python program – quick walk through:
+## Program overview:
 In the beginning, without any preprocessing on the input files, my program is able to read in PDFs and extract their content in an approximately 65-70% accuracy. 
 
 Note: for electronically generated PDFs, the accuracy is ~100%.
@@ -72,7 +103,7 @@ THAT’S NOT GOOD ENOUGH! :rage:
 
 ---
 
-## Preprocessing the input PDFs:
+## Preprocessing input PDFs:
 
 In order to improve the accuracy of our program, it requires more pre-processing on the images before we extract the text from them. 
 
@@ -109,7 +140,7 @@ tree pdfs
 
 ---
 
-## Program pipeline – Noise removal
+## Noise removal
 
 #### Preprocessing: Morphological Transformations
 
@@ -169,7 +200,7 @@ tree pdfs
 
 ---
 
-## Program pipeline – Edge-preserving smoothing
+## Edge-preserving smoothing
 
 > Image blurring is usually achieved by convolving the image with a low-pass filter kernel. In order to blur the image or to remove noise.
 
@@ -178,7 +209,7 @@ tree pdfs
 
 * After convolving an image with a normalized box filter, this simply takes the average of all the pixels under the kernel area and replaces the central element. 
 
-#### Gaussian bluring:
+#### Gaussian blurring:
 
 * This works in a similar fashion to **Averaging**, but it uses Gaussian kernel, instead of a normalized box filter, for convolution. 
 
@@ -192,7 +223,7 @@ tree pdfs
 
 --- 
 
-## Program pipeline – Binarization
+## Binarization
 
 > For a computer, all inputs eventually boils down to 1’s and 0’s. Thus, converting images to black and white immensely helps Tesseract recognize characters. However, this might fail if the input documents lack contrast or have a slightly darker background.
 
@@ -204,7 +235,7 @@ tree pdfs
 
 ---
 
-## Program pipeline – Output (sample.pdf)
+## Output (sample.pdf)
 
 
 | <img width="700" alt="output" src="https://user-images.githubusercontent.com/30438439/68221778-f8d02780-ffb7-11e9-9eb6-0f063878ef0c.PNG"> |
@@ -213,7 +244,7 @@ tree pdfs
 
 --- 
 
-## Program pipeline – Entity extractions
+## Named Entity Recognition (NER)
 
 In progress 
 
