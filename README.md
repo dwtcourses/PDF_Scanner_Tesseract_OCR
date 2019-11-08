@@ -1,4 +1,4 @@
-![GitHub](https://img.shields.io/github/license/eric035/PDF_Scanner_Tesseract_OCR) https://img.shields.io/github/pipenv/locked/python-version/Eric035/PDF_Scanner_Tesseract_OCR
+![GitHub](https://img.shields.io/github/license/eric035/PDF_Scanner_Tesseract_OCR) 
 # PDF Scanner Tesseract OCR
 > Natural Language Processing Internship Project at PSP Investments
 
