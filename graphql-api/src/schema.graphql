@@ -1,11 +1,11 @@
 type Query {
   info: String!
   pdfs: [PDF!]!         # Return all PDFs
-  
+  pdf(id: ID!): PDF     # Return the PDF with the corresponding id.
 }
 
 type Mutation {
-  post(url: String!, description: String!): Link!
+  post(filename: String!, text: String!): PDF!
 }
 
 type PDF {

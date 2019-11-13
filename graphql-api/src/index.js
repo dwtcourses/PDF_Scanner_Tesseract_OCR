@@ -3,12 +3,12 @@ const {GraphQLServer} = require('graphql-yoga')
 let pdfs = [
     {
         id: 'pdf-0',
-        filename: 'sample_pdf',
+        filename: 'sample_pdf1',
         text: 'at completeObjectValue (/Users/ericleung/Desktop/Comp/Project/PDF_Scanner_Tesseract_OCR/graphql-api/node_modules/graphql/execution/execute.js:703:10)'
     },
     {
         id: 'pdf-0',
-        filename: 'sample_pdf',
+        filename: 'sample_pdf2',
         text: 'LICENSE         README.md       graphql-api     nlp_analysis.py ocr.py'
     },
 ]
@@ -17,19 +17,23 @@ let idCount = pdfs.length
 
 const resolvers = {
     Query: {
-      info: () => `This is the API of a Hackernews Clone`,
+      info: () => `This is a GraphQL api`,
       pdfs: () => pdfs,
+      pdf:  (_, {id}) => {
+          const pdf = pdfs.find(pdf => pdf.id === id)
+          return pdf;
+      },
     },
     Mutation: {
       // 2
       post: (parent, args) => {
-         const link = {
-          id: `link-${idCount++}`,
-          description: args.description,
-          url: args.url,
+         const pdf = {
+          id: `pdf-${idCount++}`,
+          filename: args.filename,
+          text: args.text,
         }
-        links.push(link)
-        return link
+        pdfs.push(pdf)
+        return pdf
       }
     },
     PDF: {
