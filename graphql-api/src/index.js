@@ -20,18 +20,18 @@ const resolvers = {
       info: () => `This is the API of a Hackernews Clone`,
       pdfs: () => pdfs,
     },
-    // Mutation: {
-    //   // 2
-    //   post: (parent, args) => {
-    //      const link = {
-    //       id: `link-${idCount++}`,
-    //       description: args.description,
-    //       url: args.url,
-    //     }
-    //     links.push(link)
-    //     return link
-    //   }
-    // },
+    Mutation: {
+      // 2
+      post: (parent, args) => {
+         const link = {
+          id: `link-${idCount++}`,
+          description: args.description,
+          url: args.url,
+        }
+        links.push(link)
+        return link
+      }
+    },
     PDF: {
         id: (parent) => parent.id,
         filename: (parent) => parent.filename,

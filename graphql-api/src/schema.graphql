@@ -4,9 +4,9 @@ type Query {
   
 }
 
-# type Mutation {
-#   post(url: String!, description: String!): Link!
-# }
+type Mutation {
+  post(url: String!, description: String!): Link!
+}
 
 type PDF {
   id: ID!
