@@ -1,0 +1,15 @@
+type Query {
+  info: String!
+  pdfs: [Pdf!]!         # Return all PDFs
+  pdf(id: ID!): Pdf     # Return the PDF with the corresponding id.
+}
+
+type Mutation {
+  post(filename: String!, text: String!): Pdf!
+}
+
+type Pdf {
+  id: ID!   
+  filename: String!
+  text: String!
+}
