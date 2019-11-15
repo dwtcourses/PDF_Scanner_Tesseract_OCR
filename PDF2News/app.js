@@ -7,7 +7,7 @@ const {
     GraphQLList,
     GraphQLNonNull,
     GraphQLObjectType,
-    GraphQLSchema
+    GraphQLSchema,
 } = require("graphql");
 
 let app = Express();
