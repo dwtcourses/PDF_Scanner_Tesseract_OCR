@@ -1,27 +1,41 @@
-body{
+/* body{
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+} */
+
+.file-upload{
+    display: inline-flex;
+    align-items: center;
+    font-size: 15px;
 }
 
-.wrapper{
-    width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-.hidden{    
+.file-upload__input{
     display: none;
 }
 
-.upload-console{
-    background-color: #fefefe;
-    border: 2px solid #eee;
-    padding: 20px 
+.file-upload__button{
+    -webkit-appearance: none;
+    background: #009879;
+    border: 2px solid #00745d;
+    border-radius: 4px;
+    outline: none;
+    padding: 0.5em 0.8em;
+    margin-right: 15px;
+    color: white;
+    font-size: 1em;
+    font-family: 'ABeeZee', 'Roboto',sans-serif;
+    font-weight: bold;
+    cursor: pointer;
 }
 
-.upload-console-header{
-    padding: 0 0 20px 0; 
-    margin: 0;
-    margin-bottom: 20px;
-    border-bottom: 2px solid #eee;
-    font-weight: 600;
+.file-upload__button:active{
+    background: #00745D;
+}
+
+.file-upload__label{
+    max-width: 250px;
+    font-size: 0.95em;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    font-family: 'ABeeZee', 'Roboto', sans-serif;
 }

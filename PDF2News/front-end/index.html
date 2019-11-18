@@ -10,20 +10,18 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="./style.css">
+        <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=ABeeZee&display=swap" rel="stylesheet">
     </head>
     <body>
         <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
-        <div class="wrapper">
-            <div class="upload-console">
-                <h2 class="upload-console-header">UPLOAD</h2>
-
-                <div class="upload-console-body">
-                    <h3>Select files to be uploaded from your computer:</h3>
-            
-                </div>
-            </div>
+        <h2>PDF2News App</h2>
+        <div class="file-upload">
+            <input class="file-upload__input" type="file" name="myFile" id="myFile" multiple>
+            <button class="file-upload__button" type="button">Choose File(s)</button>
+            <span class="file-upload__label">No file(s) selected</span>
         </div>
         
         <script type="text/javascript" src="./index.js" async defer></script>
