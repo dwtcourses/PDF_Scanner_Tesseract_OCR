@@ -1,0 +1,31 @@
+<h2>Edit Pdf</h2>
+<form #pdfForm='ngForm' (ngSubmit)='save(pdfForm)'>
+    <div>
+        <input type="file" id="file" (change)="handleFileInput($event.target.files)" #pdfUpload>
+        <button mat-raised-button (click)='clickUpload()' type='button'>
+            Upload Pdf
+        </button>
+        {{pdfData?.file?.name}}
+    </div>
+    <mat-form-field>
+        <input matInput placeholder="Description" required #description='ngModel' name='description'
+            #description='ngModel' [(ngModel)]='pdfData.description'>
+        <mat-error *ngIf="description.invalid && (description.dirty || description.touched)">
+            <div *ngIf="description.errors.required">
+                Description is required.
+            </div>
+        </mat-error>
+    </mat-form-field>
+    <br>
+    <mat-form-field>
+        <input matInput placeholder="Tags" required #tags='ngModel' name='tags' [(ngModel)]='pdfData.tags'
+            #tags='ngModel'>
+        <mat-error *ngIf="tags.invalid && (tags.dirty || tags.touched)">
+            <div *ngIf="tags.errors.required">
+                Tags is required.
+            </div>
+        </mat-error>
+    </mat-form-field>
+    <br>
+    <button mat-raised-button type='submit'>Save</button>
+</form>
