@@ -4,8 +4,8 @@ import { HomePageComponent } from './home-page/home-page.component';
 import { UploadPageComponent } from './upload-page/upload-page.component';
 
 const routes: Routes = [
-  {path: '', component: HomePageComponent},
-  {path: 'upload', component: UploadPageComponent},
+  { path: '', component: HomePageComponent },
+  { path: 'upload', component: UploadPageComponent },
 ];
 
 @NgModule({

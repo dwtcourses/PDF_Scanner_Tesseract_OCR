@@ -12,18 +12,18 @@ export class TopBarComponent implements OnInit {
 
   constructor(
     private store: Store<any>
-  ) { 
+  ) {
     store.pipe(select('menu')).subscribe(menuOpen => {
-      this.menuOpen = menuOpen;
-    })
+        this.menuOpen = menuOpen;
+      })
   }
 
   ngOnInit() {
   }
 
-  toggleMenu(){
-    this.store.dispatch({
-      type: TOGGLE_MENU, payload: !this.menuOpen
-    });
+  toggleMenu() {
+    this.store.dispatch({ 
+      type: TOGGLE_MENU, 
+      payload: !this.menuOpen });
   }
 }

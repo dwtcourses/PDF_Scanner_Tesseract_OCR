@@ -1,8 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EditPdfDialogComponent } from './edit-pdf-dialog.component';
+import { EditPdfDialogComponent } from './edit-photo-dialog.component';
 
-describe('EditPdfDialogComponent', () => {
+describe('EditPhotoDialogComponent', () => {
   let component: EditPdfDialogComponent;
   let fixture: ComponentFixture<EditPdfDialogComponent>;
 

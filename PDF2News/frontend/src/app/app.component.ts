@@ -7,30 +7,28 @@ import { TOGGLE_MENU } from './reducers/menu-reducer';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
+
 export class AppComponent {
   menuOpen: boolean;
 
   constructor(
-    private store: Store<any>
-  ){
+    private store: Store<any>,
+  ) {
     store.pipe(select('menu')).subscribe(menuOpen => {
-      this.menuOpen = menuOpen;
-    })
+        this.menuOpen = menuOpen;
+      })
   }
 
-  @HostListener('document: click', ['$event'])
-  public onClick(event){
-    const isOutside = !event.target.className.includes("menu-button")
-    && 
-    !event.target.className.includes("material-icons") &&
-    !event.target.className.include("mat-drawer-inner-container")
-
-    if(isOutside){
+  @HostListener('document:click', ['$event'])
+  public onClick(event) {
+    const isOutside = !event.target.className.includes("menu-button") &&
+      !event.target.className.includes("material-icons") &&
+      !event.target.className.includes("mat-drawer-inner-container")
+    
+      if (isOutside) {
       this.menuOpen = false;
-      this.store.dispatch({
-        type: TOGGLE_MENU,
-        payload: this.menuOpen
-      });
+      this.store.dispatch({ type: TOGGLE_MENU, payload: this.menuOpen });
     }
   }
+
 }

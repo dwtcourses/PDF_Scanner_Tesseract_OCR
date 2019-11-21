@@ -1,11 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { PdfService } from '../pdf.service';
 import { environment } from 'src/environments/environment';
 import { MatDialog } from '@angular/material';
 import { EditPdfDialogComponent } from '../edit-pdf-dialog/edit-pdf-dialog.component';
 import { Store, select } from '@ngrx/store';
 import { SET_PDFS } from '../reducers/pdfs-reducer';
-import { ViewChild } from '@angular/core'
 import { NgForm } from '@angular/forms';
 
 @Component({
@@ -18,7 +17,7 @@ export class UploadPageComponent implements OnInit {
   pdfArrayData: any[] = [];
   page: number = 1;
   totalPdfs: number = 0;
-
+  
   @ViewChild('pdfUpload', null) pdfUpload: any;
   displayedColumns: string[] = [
     'pdfUrl',
@@ -27,74 +26,72 @@ export class UploadPageComponent implements OnInit {
     'edit',
     'delete'
   ]
-  
+
   constructor(
     private pdfService: PdfService,
     public dialog: MatDialog,
     private store: Store<any>
-  ) { 
-    store.pipe(select('pdfs')).subscribe(pdfs => {
-      this.pdfArrayData = pdfs;
-    })
+  ) {
+    store.pipe(select('pdfs'))
+      .subscribe(pdfs => {
+        this.pdfArrayData = pdfs;
+      })
   }
 
   ngOnInit() {
     this.getPdfs();
   }
 
-  clickUpload(){
+  clickUpload() {
     this.pdfUpload.nativeElement.click();
   }
 
-  handleFileInput(files){
+  handleFileInput(files) {
     console.log(files);
     this.pdfData.file = files[0];
   }
 
-  save(uploadForm: NgForm){
-    if (uploadForm.invalid || !this.pdfData.file){ return; }
-
+  save(uploadForm: NgForm) {
+    if (uploadForm.invalid || !this.pdfData.file) { return; }
+    
     const {
       file,
       description,
       tags
     } = this.pdfData;
 
-    this.pdfService.addPdf(file, description, tags).subscribe(res => {
-      this.getPdfs();
-    })
+    this.pdfService.addPdf(file, description, tags)
+      .subscribe(res => {
+        this.getPdfs();
+      })
   }
 
-  getPdfs(){
-    this.pdfService.getPdfs(this.page).subscribe(res => {
-      const pdfArrayData = (res as any).data.getPdfs.pdfs.map(p => {
-        const {
-          id,
-          description,
-          tags
-        } = p;
+  getPdfs() {
+    this.pdfService.getPdfs(this.page)
+      .subscribe(res => {
+        const pdfArrayData = (res as any).data.getPdfs.pdfs.map(p => {
+          
+          const { 
+            id, 
+            description, 
+            tags } = p;
 
-        const pathParts = p.fileLocation.split('/');
-        const pdfPath = pathParts[pathParts.length - 1];
-
-        return {
-          id,
-          description,
-          tags,
-          pdfUrl: `${environment.pdfsUrl}/${pdfPath}`
-        }
-      });
-
-      this.page = (res as any).data.getPdfs.page;
-      this.totalPdfs = (res as any).data.getPdfs.totalPdfs;
-      this.store.dispatch({
-        type: SET_PDFS,
-        payload: pdfArrayData
-      });
-    })
+          const pathParts = p.fileLocation.split('/');
+          const pdfPath = pathParts[pathParts.length - 1];
+          return {
+            id,
+            description,
+            tags,
+            photoUrl: `${environment.pdfsUrl}/${pdfPath}`
+          }
+        });
+        this.page = (res as any).data.getPdfs.page;
+        this.totalPdfs = (res as any).data.getPdfs.totalPdfs;
+        this.store.dispatch({ type: SET_PDFS, payload: pdfArrayData });
+      })
   }
 
-  openEditDialog(index: number){
+  openEditDialog(index: number) {
     const dialogRef = this.dialog.open(EditPdfDialogComponent, {
       width: '70vw',
       data: this.pdfArrayData[index] || {}
@@ -105,10 +102,11 @@ export class UploadPageComponent implements OnInit {
     });
   }
 
-  deletePdf(index: number){
-    const {id} = this.pdfArrayData[index];
-    this.pdfService.deletePdf(id).subscribe(res => {
-      this.getPdfs();
-    })
+  deletePdf(index: number) {
+    const { id } = this.pdfArrayData[index];
+    this.pdfService.deletePdf(id)
+      .subscribe(res => {
+        this.getPdfs();
+      })
   }
 }

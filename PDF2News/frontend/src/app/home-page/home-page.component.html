@@ -3,7 +3,7 @@
         <input matInput placeholder="Search Pdfs" required #search='ngModel' name='search' [(ngModel)]='query.search'>
         <mat-error *ngIf="search.invalid && (search.dirty || search.touched)">
             <div *ngIf="search.errors.required">
-                A search query is required.
+                Search query is required.
             </div>
         </mat-error>
     </mat-form-field>

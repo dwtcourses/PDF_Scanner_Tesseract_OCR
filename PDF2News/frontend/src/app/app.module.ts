@@ -30,13 +30,14 @@ import { UploadPageComponent } from './upload-page/upload-page.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { EditPdfDialogComponent } from './edit-pdf-dialog/edit-pdf-dialog.component';
 
+
 @NgModule({
   declarations: [
     AppComponent,
     TopBarComponent,
+    HomePageComponent,
     UploadPageComponent,
     EditPdfDialogComponent,
-    HomePageComponent,
   ],
   imports: [
     BrowserModule,

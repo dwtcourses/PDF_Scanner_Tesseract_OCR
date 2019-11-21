@@ -5,4 +5,3 @@ describe('PdfsReducer', () => {
     expect(new PdfsReducer()).toBeTruthy();
   });
 });
-
