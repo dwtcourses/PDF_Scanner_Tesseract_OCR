@@ -1,35 +1,32 @@
 const Op = require('sequelize').Op;
 
-// Model 
 const models = require('../models');
 const fs = require('fs');
 
-const storeFS = ({stream, filename}) => {
+const storeFS = ({ stream, filename }) => {
     const uploadDir = '../backend/pdfs';
     const path = `${uploadDir}/${filename}`;
-    return new Promise((resolve, reject) => 
-    stream
-    .on('error', error => {
-        if (stream.truncated)
-            // delete the truncated file
-            fs.unlinkSync(path);
-        reject(error);
-    })
-    .pipe(fs.createWriteStream(path))
-    .on('error', error => reject(error))
-    .on('finish', () => resolve({path}))
+    return new Promise((resolve, reject) =>
+        stream
+            .on('error', error => {
+                if (stream.truncated)
+                    // delete the truncated file
+                    fs.unlinkSync(path);
+                reject(error);
+            })
+            .pipe(fs.createWriteStream(path))
+            .on('error', error => reject(error))
+            .on('finish', () => resolve({ path }))
     );
 }
 
-// Read PDF
-export const getPdfs = async(args) => {
+export const getPdfs = async (args) => {
     const page = args.page;
-    const pdfs = await models.PDF2News.findAll({
+    const pdfs = await models.Pdf.findAll({
         offset: (page - 1) * 10,
-        limit: 10,
+        limit: 10
     });
-
-    const totalPdfs = await models.PDF2News.count();
+    const totalPdfs = await models.Pdf.count();
     return {
         pdfs,
         page,
@@ -37,28 +34,28 @@ export const getPdfs = async(args) => {
     };
 }
 
-// Create PDF
 export const addPdf = async (args) => {
-    const {description, tags} = args;
-    const {filename, mimetype, createReadStream} = await args.file;
+    const { description, tags } = args;
+    const { filename, mimetype, createReadStream } = await args.file;
     const stream = createReadStream();
-    const pathObj = await storeFS({stream, filename});
+    const pathObj = await storeFS({ stream, filename });
     const fileLocation = pathObj.path;
-    const pdf = await models.PDF2News.create({
+    const pdf = await models.Pdf.create({
         fileLocation,
         description,
         tags
     })
+    return pdf;
 }
 
-// Update PDF
+
 export const editPdf = async (args) => {
     const { id, description, tags } = args;
     const { filename, mimetype, createReadStream } = await args.file;
     const stream = createReadStream();
     const pathObj = await storeFS({ stream, filename });
     const fileLocation = pathObj.path;
-    const pdf = await models.PDF2News.update({
+    const pdf = await models.Pdf.update({
         fileLocation,
         description,
         tags
@@ -70,40 +67,38 @@ export const editPdf = async (args) => {
     return pdf;
 }
 
-// Delete PDF
 export const deletePdf = async (args) => {
-    const {id} = args;
-    await models.PDF2News.destroy({
-        where:{
+    const { id } = args;
+    await models.Pdf.destroy({
+        where: {
             id
         }
     })
     return id;
 }
 
-// Search PDF
 export const searchPdfs = async (args) => {
     const searchQuery = args.searchQuery;
-    const pdfs = await models.PDF2News.findAll({
-        where:{
-            [Op.or]:[
+    const pdfs = await models.Pdf.findAll({
+        where: {
+            [Op.or]: [
                 {
-                    description:{
+                    description: {
                         [Op.like]: `%${searchQuery}%`
                     }
                 },
                 {
-                    tags:{
+                    tags: {
                         [Op.like]: `%${searchQuery}%`
                     }
                 }
             ]
         }
+
     });
-    const totalPdfs = await models.PDF2News.count();
+    const totalPdfs = await models.Pdf.count();
     return {
         pdfs,
-        totalPdfs,
+        totalPdfs
     };
 }
-
