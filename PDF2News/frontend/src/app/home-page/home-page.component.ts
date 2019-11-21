@@ -9,10 +9,46 @@ import { NgForm } from '@angular/forms';
   styleUrls: ['./home-page.component.scss']
 })
 export class HomePageComponent implements OnInit {
+  pdfUrls: string[] = [];
+  query: any = <any>{};
 
-  constructor() { }
+  constructor(
+    private pdfService: PdfService
+  ) { }
 
   ngOnInit() {
+    this.getPdfs();
   }
 
+  getPdfs(){
+    this.pdfService.getPdfs()
+    .subscribe(res => {
+      this.pdfUrls = (res as any).data.getPdfs.pdfs.map(p =>
+        {
+          const pathParts = p.fileLocation.split('/');
+          const pdfPath = pathParts[pathParts.length - 1];
+          
+          return `${environment.pdfsUrl}/${pdfPath}`;
+        });
+      })
+  }
+
+  searchPdfs(searchForm: NgForm){
+    if (searchForm.invalid){ return; }
+
+    this.searchPdfsQuery();
+  }
+
+  searchPdfsQuery(){
+    this.pdfService.searchPdfs(this.query.search)
+    .subscribe(res => {
+      this.pdfUrls = (res as any)
+      .data.searchPdfs.pdfs.map(p => {
+        const pathParts = p.fileLocation.split('/');
+        const pdfPath = pathParts[pathParts.length - 1];
+
+        return `${environment.pdfsUrl}/${pdfPath}`;
+      });
+    })
+  }
 }

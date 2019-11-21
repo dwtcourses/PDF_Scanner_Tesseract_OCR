@@ -1,1 +1,69 @@
-<p>upload-page works!</p>
+<div class="center">
+    <h1>Manage Files</h1>
+</div>
+<h2>Add Pdf</h2>
+<form #pdfForm='ngForm' (ngSubmit)='save(pdfForm)'>
+    <div>
+        <input type="file" id="file" (change)="handleFileInput($event.target.files)" #photoUpload>
+        <button mat-raised-button (click)='clickUpload()' type='button'>
+            Upload Pdf
+        </button>
+        {{pdfData?.file?.name}}
+    </div>
+    <mat-form-field>
+        <input matInput placeholder="Description" required #description='ngModel' name='description'
+            #description='ngModel' [(ngModel)]='pdfData.description'>
+        <mat-error *ngIf="description.invalid && (description.dirty || description.touched)">
+            <div *ngIf="description.errors.required">
+                Description is required.
+            </div>
+        </mat-error>
+    </mat-form-field>
+    <br>
+    <mat-form-field>
+        <input matInput placeholder="Tags" required #tags='ngModel' name='tags' [(ngModel)]='pdfData.tags'
+            #tags='ngModel'>
+        <mat-error *ngIf="tags.invalid && (tags.dirty || tags.touched)">
+            <div *ngIf="tags.errors.required">
+                Tags is required.
+            </div>
+        </mat-error>
+    </mat-form-field>
+    <br>
+    <button mat-raised-button type='submit'>Save</button>
+</form>
+<br>
+<h2>Manage Pdfs</h2>
+<table mat-table [dataSource]="pdfArrayData" class="mat-elevation-z8">
+    <ng-container matColumnDef="pdfUrl">
+        <th mat-header-cell *matHeaderCellDef> Pdf </th>
+        <td mat-cell *matCellDef="let pdf">
+            <img [src]='pdf.pdfUrl' class="pdf">
+        </td>
+    </ng-container>
+<ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef> Description </th>
+        <td mat-cell *matCellDef="let pdf"> {{pdf.description}} </td>
+    </ng-container>
+<ng-container matColumnDef="tags">
+        <th mat-header-cell *matHeaderCellDef> Tags </th>
+        <td mat-cell *matCellDef="let pdf"> {{pdf.tags}} </td>
+    </ng-container>
+<ng-container matColumnDef="edit">
+        <th mat-header-cell *matHeaderCellDef> Edit </th>
+        <td mat-cell *matCellDef="let pdf; let i = index">
+            <button mat-raised-button (click)='openEditDialog(i)'>Edit</button>
+        </td>
+    </ng-container>
+<ng-container matColumnDef="delete">
+        <th mat-header-cell *matHeaderCellDef> Delete </th>
+        <td mat-cell *matCellDef="let pdf; let i = index">
+            <button mat-raised-button (click)='deletePdf(i)'>Delete</button>
+        </td>
+    </ng-container>
+<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+<mat-paginator [length]="totalPdfs" [pageSize]="10" [pageSizeOptions]="[10]"
+    (page)="page = $event.pageIndex + 1; getPdfs()">
+</mat-paginator>

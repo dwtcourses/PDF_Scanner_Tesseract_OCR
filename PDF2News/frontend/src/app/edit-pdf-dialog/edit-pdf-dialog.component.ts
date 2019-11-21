@@ -59,8 +59,7 @@ export class EditPdfDialogComponent implements OnInit {
   getPdfs(){
     this.pdfService.getPdfs()
     .subscribe(res => {
-      const pdfArrayData = (res as
-        any).data.getPdfs.pdfs.map(p => {
+      const pdfArrayData = (res as any).data.getPdfs.pdfs.map(p => {
           const {id, description, tags} = p;
           const pathParts = p.fileLocation.split('/');
           const pdfPath = pathParts[pathParts.length - 1];
