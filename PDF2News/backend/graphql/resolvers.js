@@ -4,7 +4,7 @@ const models = require('../models');
 const fs = require('fs');
 
 const storeFS = ({ stream, filename }) => {
-    const uploadDir = '../backend/pdfs';
+    const uploadDir = '../backend/user_uploads';
     const path = `${uploadDir}/${filename}`;
     return new Promise((resolve, reject) =>
         stream
