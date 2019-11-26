@@ -12,8 +12,8 @@ import numpy as np
 # Adding tesseract into our path
 pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files (x86)\\Tesseract-OCR\\tesseract.exe'
 
-# Default file path to the output images converted from pdfs
-CONVERTED_PDF_IMAGE_DIR = ".\\pdfs\\converted_pdf_images"
+# Default PDFs directory
+PDF_DIR = ".\\PDF2News\\backend\\user_uploads"
 
 # Auxiliary
 def parseArgs():
@@ -140,9 +140,10 @@ def convert_pdf(filename, output_path, resolution=300):
         The function removes the alpha channel from the image and
         replace it with a white background.
     """
-    all_pages = wi(filename=filename, resolution=resolution)
     output_dir = os.path.join(output_path, os.path.splitext(os.path.basename(filename))[0])
+    all_pages = wi(filename= f"{output_dir}.pdf", resolution=resolution)
     
+    print(os.path.exists(output_dir))
     # Check if an output directory exists, if not then create one. Else continue
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)
@@ -202,9 +203,9 @@ def main():
     # If a pdf file path is given, then we need to use "wand" to convert the pdf into image first 
     if args["pdf"]:
         path_to_pdf = args["pdf"]
-        convert_pdf(path_to_pdf, CONVERTED_PDF_IMAGE_DIR)  # A list of images converted from the input pdf 
+        convert_pdf(path_to_pdf, PDF_DIR)  # A list of images converted from the input pdf 
     
-    images_path = os.path.join(CONVERTED_PDF_IMAGE_DIR, os.path.splitext(os.path.basename(args["pdf"]))[0])   
+    images_path = os.path.join(PDF_DIR, os.path.splitext(os.path.basename(args["pdf"]))[0])   
     images_path = os.path.join(images_path, "image_files")        
     images_list = os.listdir(images_path)
     images_list_sorted = sort_image_list(images_list)
@@ -217,14 +218,14 @@ def main():
         image, gray = load_img(img_path)
         
         # Preprocess the gray image we obtained earlier
-        gray_preprocessed = preprocess_img(args["pdf"], CONVERTED_PDF_IMAGE_DIR, page_num, args["preprocess"], gray)
+        gray_preprocessed = preprocess_img(args["pdf"], PDF_DIR, page_num, args["preprocess"], gray)
         
         # Store the text extracted from the image
         text_extracted = apply_OCR(gray_preprocessed)
         print(text_extracted)
         
         # Save extracted page content into its corresponding .txt file
-        save2Txt(args['pdf'], page_num, text_extracted, CONVERTED_PDF_IMAGE_DIR)
+        save2Txt(args['pdf'], page_num, text_extracted, PDF_DIR)
         
         print("++++++++++++++++++++++++ End of page ++++++++++++++++++++++++")
         print('')
