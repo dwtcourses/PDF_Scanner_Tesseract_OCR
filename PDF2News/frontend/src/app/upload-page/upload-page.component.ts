@@ -82,7 +82,7 @@ export class UploadPageComponent implements OnInit {
             id,
             description,
             tags,
-            photoUrl: `${environment.pdfsUrl}/${pdfPath}`
+            pdfUrl: `${environment.pdfsUrl}/${pdfPath}`
           }
         });
         this.page = (res as any).data.getPdfs.page;
