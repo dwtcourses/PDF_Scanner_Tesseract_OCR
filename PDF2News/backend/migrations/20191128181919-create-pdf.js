@@ -8,6 +8,9 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      cookieId: {
+        type: Sequelize.STRING
+      },
       fileLocation: {
         type: Sequelize.STRING
       },
