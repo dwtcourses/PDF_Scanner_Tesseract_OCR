@@ -1,10 +1,9 @@
 const Op = require('sequelize').Op;
-
 const models = require('../models');
 const fs = require('fs');
 
 const storeFS = ({ stream, filename }) => {
-    const uploadDir = '../backend/user_uploads';
+    const uploadDir = '../backend/pdfs';
     const path = `${uploadDir}/${filename}`;
     return new Promise((resolve, reject) =>
         stream
@@ -68,12 +67,26 @@ export const editPdf = async (args) => {
 }
 
 export const deletePdf = async (args) => {
+    // const { filename, mimetype, createReadStream } = await args.file;
+    // const uploadDir = '../backend/pdfs';
+    // const path = `${uploadDir}/${filename}`;
     const { id } = args;
+
+    // Remove file from DB
     await models.Pdf.destroy({
         where: {
             id
         }
     })
+    
+    // Remove file in the user upload directory
+    // await fs.unlink(path, (error) => {
+    //     if (error){
+    //         console.log(error);
+    //         return;
+    //     }
+    // })
+
     return id;
 }
 
