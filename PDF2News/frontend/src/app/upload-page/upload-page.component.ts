@@ -17,6 +17,7 @@ export class UploadPageComponent implements OnInit {
   pdfArrayData: any[] = [];
   page: number = 1;
   totalPdfs: number = 0;
+  private cookieValue: string;
   
   @ViewChild('pdfUpload', null) pdfUpload: any;
   displayedColumns: string[] = [
@@ -30,7 +31,7 @@ export class UploadPageComponent implements OnInit {
   constructor(
     private pdfService: PdfService,
     public dialog: MatDialog,
-    private store: Store<any>
+    private store: Store<any>,
   ) {
     store.pipe(select('pdfs'))
       .subscribe(pdfs => {

@@ -5,7 +5,9 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const expressGraphql = require('express-graphql');
 const cors = require('cors');
+const uuid = require('uuid')
 const app = express();
+
 import { GraphQLUpload } from 'graphql-upload'
 import { schema } from './graphql/schema'
 import {
@@ -61,6 +63,10 @@ app.use(function (err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
+});
+
+app.get('/', (req, res) =>{
+  res.cookie('myFirstCookie', 'Looks good!', {'maxAge': 5000});
 });
 
 module.exports = app;
