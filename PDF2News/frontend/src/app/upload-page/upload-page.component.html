@@ -43,10 +43,13 @@
     <mat-card-header>
         <div mat-card-avatar class="pdf-extension-logo"></div>
         <mat-card-title>Named Entities found: </mat-card-title>
-        <mat-card-subtitle>Cookie id: </mat-card-subtitle>
+        <mat-card-subtitle>Cookie id: {{myCookie.cookieId}}</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
-        
+        <!-- <script type="text/typescript">
+            const value: string = cookieService.get('Cookie Name');
+            console.log(string);
+        </script> -->
     </mat-card-content>
     <mat-card-actions>
         <button mat-button>Send entities to Owlin's API</button>

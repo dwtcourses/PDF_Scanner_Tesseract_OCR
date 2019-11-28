@@ -50,12 +50,12 @@ app.use(
 )
 
 // catch 404 and forward to error handler
-app.use(function (req, res, next) {
+app.use((req, res, next) => {
   next(createError(404));
 });
 
 // error handler
-app.use(function (err, req, res, next) {
+app.use((err, req, res, next) => {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -65,8 +65,8 @@ app.use(function (err, req, res, next) {
   res.render('error');
 });
 
-app.get('/', (req, res) =>{
-  res.cookie('myFirstCookie', 'Looks good!', {'maxAge': 5000});
+app.get('/', function(req, res){
+  res.cookie('name', 'express').send('cookie set'); //Sets name = express
 });
 
 module.exports = app;

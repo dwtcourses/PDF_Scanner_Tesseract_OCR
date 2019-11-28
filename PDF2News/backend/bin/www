@@ -3,7 +3,7 @@ require('dotenv').config();
 /**
  * Module dependencies.
  */
-
+// const cookieParser = require('cookie-parser');
 var app = require('../app');
 var debug = require('debug')('backend:server');
 var http = require('http');
@@ -20,6 +20,12 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
+
+// Set Cookie 
+// app.use(cookieParser());
+// app.get('/upload', (req, res) =>{
+//   res.cookie('myFirstCookie', 'Looks good!', {'maxAge': 60000});
+// });
 
 /**
  * Listen on provided port, on all network interfaces.

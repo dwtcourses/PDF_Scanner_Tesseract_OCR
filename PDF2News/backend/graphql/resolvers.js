@@ -40,6 +40,7 @@ export const addPdf = async (args) => {
     const pathObj = await storeFS({ stream, filename });
     const fileLocation = pathObj.path;
     const pdf = await models.Pdf.create({
+        cookieId,
         fileLocation,
         description,
         tags

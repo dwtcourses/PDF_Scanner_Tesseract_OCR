@@ -5,6 +5,7 @@ export const schema = buildSchema( `
 
     type Pdf {
         id: Int,
+        cookieId: String,
         fileLocation: String,
         description: String,
         tags: String

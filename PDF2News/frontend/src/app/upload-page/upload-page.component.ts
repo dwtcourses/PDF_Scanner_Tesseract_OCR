@@ -6,6 +6,8 @@ import { EditPdfDialogComponent } from '../edit-pdf-dialog/edit-pdf-dialog.compo
 import { Store, select } from '@ngrx/store';
 import { SET_PDFS } from '../reducers/pdfs-reducer';
 import { NgForm } from '@angular/forms';
+import { CookieService } from 'ngx-cookie-service';
+import { CookieIdComponent } from '../cookie-id/cookie-id.component';
 
 @Component({
   selector: 'app-upload-page',
@@ -13,11 +15,11 @@ import { NgForm } from '@angular/forms';
   styleUrls: ['./upload-page.component.scss']
 })
 export class UploadPageComponent implements OnInit {
+  cookieVal: string;
   pdfData: any = <any>{};
   pdfArrayData: any[] = [];
   page: number = 1;
   totalPdfs: number = 0;
-  private cookieValue: string;
   
   @ViewChild('pdfUpload', null) pdfUpload: any;
   displayedColumns: string[] = [
@@ -29,6 +31,7 @@ export class UploadPageComponent implements OnInit {
   ]
 
   constructor(
+    public cookieService: CookieService,
     private pdfService: PdfService,
     public dialog: MatDialog,
     private store: Store<any>,
@@ -41,6 +44,8 @@ export class UploadPageComponent implements OnInit {
 
   ngOnInit() {
     this.getPdfs();
+    this.cookieService.set('Cookie Name', 'Cookie Value');
+    this.cookieVal = this.cookieService.get('Cookie Name');
   }
 
   clickUpload() {
@@ -110,4 +115,6 @@ export class UploadPageComponent implements OnInit {
         this.getPdfs();
       })
   }
+
+  myCookie = new CookieIdComponent('hello');
 }
