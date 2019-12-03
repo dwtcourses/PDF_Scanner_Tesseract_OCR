@@ -30,7 +30,7 @@ import { UploadPageComponent } from './upload-page/upload-page.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { EditPdfDialogComponent } from './edit-pdf-dialog/edit-pdf-dialog.component';
 import { CookieService } from 'ngx-cookie-service';
-import { CookieIdComponent } from './cookie-id/cookie-id.component';
+// import { CookieIdComponent } from './cookie-id/cookie-id.component';
 
 
 @NgModule({
@@ -40,7 +40,7 @@ import { CookieIdComponent } from './cookie-id/cookie-id.component';
     HomePageComponent,
     UploadPageComponent,
     EditPdfDialogComponent,
-    CookieIdComponent
+    // CookieIdComponent
   ],
   imports: [
     BrowserModule,

@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CookieIdComponent } from './cookie-id.component';
+import { UsernameComponent } from './username.component';
 
-describe('CookieIdComponent', () => {
-  let component: CookieIdComponent;
-  let fixture: ComponentFixture<CookieIdComponent>;
+describe('UsernameComponent', () => {
+  let component: UsernameComponent;
+  let fixture: ComponentFixture<UsernameComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CookieIdComponent ]
+      declarations: [ UsernameComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CookieIdComponent);
+    fixture = TestBed.createComponent(UsernameComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

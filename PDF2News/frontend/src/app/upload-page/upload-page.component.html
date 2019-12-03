@@ -43,13 +43,10 @@
     <mat-card-header>
         <div mat-card-avatar class="pdf-extension-logo"></div>
         <mat-card-title>Named Entities found: </mat-card-title>
-        <mat-card-subtitle>Cookie id: {{myCookie.cookieId}}</mat-card-subtitle>
+        <mat-card-subtitle>Username: {{username}}</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
-        <!-- <script type="text/typescript">
-            const value: string = cookieService.get('Cookie Name');
-            console.log(string);
-        </script> -->
+    
     </mat-card-content>
     <mat-card-actions>
         <button mat-button>Send entities to Owlin's API</button>
@@ -62,7 +59,7 @@
 
 <table mat-table [dataSource]="pdfArrayData" class="mat-elevation-z8">
     <ng-container matColumnDef="pdfUrl">
-        <th mat-header-cell *matHeaderCellDef> Photo </th>
+        <th mat-header-cell *matHeaderCellDef> Pdf </th>
         <td mat-cell *matCellDef="let pdf">
             <img [src]='pdf.pdfUrl' class="pdf">
         </td>

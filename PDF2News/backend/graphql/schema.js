@@ -5,7 +5,7 @@ export const schema = buildSchema( `
 
     type Pdf {
         id: Int,
-        cookieId: String,
+        username: String,
         fileLocation: String,
         description: String,
         tags: String
@@ -23,7 +23,7 @@ export const schema = buildSchema( `
     }
 
     type Mutation {
-        addPdf(file: Upload!, description: String, tags: String): Pdf
+        addPdf(username: String, file: Upload!, description: String, tags: String): Pdf
         editPdf(id: Int, file: Upload!, description: String, tags: String): Pdf
         deletePdf(id: Int): Int
     }

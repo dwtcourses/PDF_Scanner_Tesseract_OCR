@@ -5,7 +5,10 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const expressGraphql = require('express-graphql');
 const cors = require('cors');
-const uuid = require('uuid')
+const spawn = require('child_process').spawn;
+const pythonProcess = spawn('python', ["../../app.py", arg1, arg2]);
+
+// App
 const app = express();
 
 import { GraphQLUpload } from 'graphql-upload'
@@ -63,10 +66,6 @@ app.use((err, req, res, next) => {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
-});
-
-app.get('/', function(req, res){
-  res.cookie('name', 'express').send('cookie set'); //Sets name = express
 });
 
 module.exports = app;

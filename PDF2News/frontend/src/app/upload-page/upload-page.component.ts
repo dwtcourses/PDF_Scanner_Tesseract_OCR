@@ -6,8 +6,9 @@ import { EditPdfDialogComponent } from '../edit-pdf-dialog/edit-pdf-dialog.compo
 import { Store, select } from '@ngrx/store';
 import { SET_PDFS } from '../reducers/pdfs-reducer';
 import { NgForm } from '@angular/forms';
-import { CookieService } from 'ngx-cookie-service';
-import { CookieIdComponent } from '../cookie-id/cookie-id.component';
+// import { CookieService } from 'ngx-cookie-service';
+import { UsernameComponent } from '../username/username.component'; 
+import * as uuid from 'uuid';
 
 @Component({
   selector: 'app-upload-page',
@@ -15,7 +16,8 @@ import { CookieIdComponent } from '../cookie-id/cookie-id.component';
   styleUrls: ['./upload-page.component.scss']
 })
 export class UploadPageComponent implements OnInit {
-  cookieVal: string;
+  opId: number;
+  username: string;
   pdfData: any = <any>{};
   pdfArrayData: any[] = [];
   page: number = 1;
@@ -31,7 +33,7 @@ export class UploadPageComponent implements OnInit {
   ]
 
   constructor(
-    public cookieService: CookieService,
+    // public cookieService: CookieService,
     private pdfService: PdfService,
     public dialog: MatDialog,
     private store: Store<any>,
@@ -44,8 +46,10 @@ export class UploadPageComponent implements OnInit {
 
   ngOnInit() {
     this.getPdfs();
-    this.cookieService.set('Cookie Name', 'Cookie Value');
-    this.cookieVal = this.cookieService.get('Cookie Name');
+    const uid = uuid.v4();
+    this.username = uid;
+    // this.cookieService.set('upload-page', uid, 60000);
+    // this.cookieVal = this.cookieService.get('upload-page');
   }
 
   clickUpload() {
@@ -62,12 +66,14 @@ export class UploadPageComponent implements OnInit {
     
     const {
       file,
+      // username,
       description,
       tags
     } = this.pdfData;
 
-    this.pdfService.addPdf(file, description, tags)
+    this.pdfService.addPdf(this.username, file, description, tags)
       .subscribe(res => {
+        console.log(`Username: ${this.username}`);
         this.getPdfs();
       })
   }
@@ -116,5 +122,5 @@ export class UploadPageComponent implements OnInit {
       })
   }
 
-  myCookie = new CookieIdComponent('hello');
+  user = new UsernameComponent(this.username);
 }
