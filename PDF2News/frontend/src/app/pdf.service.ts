@@ -43,7 +43,8 @@ export class PdfService {
         sessionId,
         file,
         description,
-        tags
+        tags,
+        status
       },
       context: {
         useMultipart: true

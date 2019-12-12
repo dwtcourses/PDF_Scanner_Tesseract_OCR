@@ -46,9 +46,6 @@ export class UploadPageComponent implements OnInit {
 
   ngOnInit() {
     this.getPdfs();
-    const uid = uuid.v4();
-    this.sessionId = uid;
-    this.status = "CREATED";
     // this.cookieService.set('upload-page', uid, 60000);
     // this.cookieVal = this.cookieService.get('upload-page');
   }
@@ -63,6 +60,10 @@ export class UploadPageComponent implements OnInit {
   }
 
   save(uploadForm: NgForm) {
+    const uid = uuid.v4();
+    this.sessionId = uid;
+    this.status = "CREATED";
+    
     if (uploadForm.invalid || !this.pdfData.file) { return; }
     
     const {

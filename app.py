@@ -27,7 +27,9 @@ import nlp_preprocess
 import os
 import sys
 from sqlalchemy import create_engine
-from sqlalchemy import Column, String
+from sqlalchemy.orm.exc import FlushError
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy import Column, String, Integer, Date
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
@@ -38,25 +40,52 @@ PDF_DIR = '.\\PDF2News\\backend\\pdfs'
 db_string = 'postgres://postgres:El260720788!@localhost:5432/postgres'
 
 # Create DB engine:
-db = create_engine(db_string)
+engine = create_engine(db_string)
+session = sessionmaker(bind=engine)()
 base = declarative_base()
 
-class PDF(base):
-    __tablename__ = "pdfs"
+class Pdf(base):
+    __tablename__ = "Pdfs"
     
-     = Column(String, primary_key=True)
-    director = Column(String)
-    year = Column(String)
+    # Fields
+    id = Column(Integer, primary_key=True)
+    sessionId = Column(String)
+    fileLocation = Column(String)
+    description = Column(String)
+    tags = Column(String)
+    createdAt = Column(Date)
+    updatedAt = Column(Date)
+    status = Column(String)
     
-Session = sessionmaker(db)
-session = Session()
+def getPdfs(fileformat: str):
+    ''' Function to query all files in the "Pdfs" table 
+        that matches the given file format
+    
+        Input: 
+            sessionId - A string that represents the file format of the uploaded pdf file
+        
+        Output (Console):
+            Prints out all files that matches the given file format.
+    '''
+    pdfs = session.query(Pdf) \
+        .filter(Pdf.tags == fileformat) \
+        .all()
+    
+    for pdf in pdfs:
+        id = pdf.id
+        sessionId = pdf.sessionId
+        fileLocation = pdf.fileLocation
+        description = pdf.description
+        tags = pdf.tags
+        createdAt = pdf.createdAt
+        updatedAt = pdf.updatedAt
+        status = pdf.status
 
-# Creates our table
-# base.metadata.create_all(db)
+        print(f"ID: {id} || Session ID: {sessionId} || File location: {fileLocation} || description: {description} || tags: {tags} || Created at: {createdAt} || Updated at: {updatedAt} || Status: {status} \n")
+    
+getPdfs('py')
 
-
-
-def main(filename):
+def main(sessionId):
     ''' Main function 
     
     Application: Perform OCR text extraction and NLP analysis for user input file.  
@@ -93,6 +122,7 @@ def main(filename):
         print('')
 
     
-if __name__ == "__main__":
-    filename = "sample.pdf"
-    main(filename)
+# if __name__ == "__main__":
+#     filename = "sample.pdf"
+#     main(filename)
+    

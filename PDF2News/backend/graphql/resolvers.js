@@ -1,6 +1,7 @@
 const Op = require('sequelize').Op;
 const models = require('../models');
 const fs = require('fs');
+var pyshell = require('python-shell');
 
 const storeFS = ({ stream, filename }) => {
     const uploadDir = '../backend/pdfs';
@@ -46,6 +47,22 @@ export const addPdf = async (args) => {
         tags,
         status
     })
+
+    // Options for Python Shell
+    let options = {
+        mode: 'text',
+        encoding: 'utf-8',
+        pythonOptions: ['-u'],
+        scriptPath: 'C:\\Users\\Administrator\\Desktop\\Eric\\pytesseract\\app.py'
+        
+    };
+    
+    const entities = pyshell.PythonShell.run('app.py', options, (err, results) => {
+        if (err) throw err;
+        console.log('Results: %j', results);
+        return results;
+    });
+
     return pdf;
 }
 
