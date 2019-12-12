@@ -16,7 +16,7 @@ import * as uuid from 'uuid';
   styleUrls: ['./upload-page.component.scss']
 })
 export class UploadPageComponent implements OnInit {
-  opId: number;
+  status: string;
   sessionId: string;
   pdfData: any = <any>{};
   pdfArrayData: any[] = [];
@@ -48,6 +48,7 @@ export class UploadPageComponent implements OnInit {
     this.getPdfs();
     const uid = uuid.v4();
     this.sessionId = uid;
+    this.status = "CREATED";
     // this.cookieService.set('upload-page', uid, 60000);
     // this.cookieVal = this.cookieService.get('upload-page');
   }
@@ -70,9 +71,9 @@ export class UploadPageComponent implements OnInit {
       tags
     } = this.pdfData;
 
-    this.pdfService.addPdf(this.sessionId, file, description, tags)
+    this.pdfService.addPdf(this.sessionId, file, description, tags, this.status)
       .subscribe(res => {
-        console.log(`Username: ${this.sessionId}`);
+        console.log(`Session ID: ${this.sessionId}`);
         this.getPdfs();
       })
   }

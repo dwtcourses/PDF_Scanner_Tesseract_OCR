@@ -22,17 +22,44 @@ __maintainer__ = "Eric Leung / future interns"
 __email__ = "Eleung@investpsp.ca"
 __status__ = "Dev"
 
-import os
 import ocr
 import nlp_preprocess
+import os
+import sys
+from sqlalchemy import create_engine
+from sqlalchemy import Column, String
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 
 # Path to PDFs directory (Default)
-PDF_DIR = '.\\PDF2News\\backend\\user_uploads'
+PDF_DIR = '.\\PDF2News\\backend\\pdfs'
+
+# DB connection: 
+db_string = 'postgres://postgres:El260720788!@localhost:5432/postgres'
+
+# Create DB engine:
+db = create_engine(db_string)
+base = declarative_base()
+
+class PDF(base):
+    __tablename__ = "pdfs"
+    
+     = Column(String, primary_key=True)
+    director = Column(String)
+    year = Column(String)
+    
+Session = sessionmaker(db)
+session = Session()
+
+# Creates our table
+# base.metadata.create_all(db)
+
+
 
 def main(filename):
     ''' Main function 
     
-    Application: Perform OCR text extraction and NLP analysis for user input file. 
+    Application: Perform OCR text extraction and NLP analysis for user input file.  
                  Return Named Entities obtained from the corresponding file.
     '''
     
