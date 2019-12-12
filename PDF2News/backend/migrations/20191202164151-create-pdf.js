@@ -8,7 +8,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      username: {
+      sessionId: {
         type: Sequelize.STRING
       },
       fileLocation: {
@@ -27,6 +27,10 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
+      },
+      status: {
+        allowNull: false,
+        type: Sequelize.STRING
       }
     });
   },

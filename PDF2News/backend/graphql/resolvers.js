@@ -34,16 +34,17 @@ export const getPdfs = async (args) => {
 }
 
 export const addPdf = async (args) => {
-    const { username, description, tags } = args;
+    const { sessionId, description, tags, status } = args;
     const { filename, mimetype, createReadStream } = await args.file;
     const stream = createReadStream();
     const pathObj = await storeFS({ stream, filename });
     const fileLocation = pathObj.path;
     const pdf = await models.Pdf.create({
-        username,
+        sessionId,
         fileLocation,
         description,
-        tags
+        tags,
+        status
     })
     return pdf;
 }

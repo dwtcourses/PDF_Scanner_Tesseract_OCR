@@ -5,10 +5,11 @@ export const schema = buildSchema( `
 
     type Pdf {
         id: Int,
-        username: String,
+        sessionId: String,
         fileLocation: String,
         description: String,
-        tags: String
+        tags: String,
+        status: String
     }
 
     type PdfData {
@@ -23,7 +24,7 @@ export const schema = buildSchema( `
     }
 
     type Mutation {
-        addPdf(username: String, file: Upload!, description: String, tags: String): Pdf
+        addPdf(sessionId: String, file: Upload!, description: String, tags: String, status: String): Pdf
         editPdf(id: Int, file: Upload!, description: String, tags: String): Pdf
         deletePdf(id: Int): Int
     }

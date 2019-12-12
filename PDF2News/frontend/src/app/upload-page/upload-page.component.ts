@@ -7,7 +7,7 @@ import { Store, select } from '@ngrx/store';
 import { SET_PDFS } from '../reducers/pdfs-reducer';
 import { NgForm } from '@angular/forms';
 // import { CookieService } from 'ngx-cookie-service';
-import { UsernameComponent } from '../username/username.component'; 
+// import { UsernameComponent } from '../username/username.component'; 
 import * as uuid from 'uuid';
 
 @Component({
@@ -17,7 +17,7 @@ import * as uuid from 'uuid';
 })
 export class UploadPageComponent implements OnInit {
   opId: number;
-  username: string;
+  sessionId: string;
   pdfData: any = <any>{};
   pdfArrayData: any[] = [];
   page: number = 1;
@@ -47,7 +47,7 @@ export class UploadPageComponent implements OnInit {
   ngOnInit() {
     this.getPdfs();
     const uid = uuid.v4();
-    this.username = uid;
+    this.sessionId = uid;
     // this.cookieService.set('upload-page', uid, 60000);
     // this.cookieVal = this.cookieService.get('upload-page');
   }
@@ -66,14 +66,13 @@ export class UploadPageComponent implements OnInit {
     
     const {
       file,
-      // username,
       description,
       tags
     } = this.pdfData;
 
-    this.pdfService.addPdf(this.username, file, description, tags)
+    this.pdfService.addPdf(this.sessionId, file, description, tags)
       .subscribe(res => {
-        console.log(`Username: ${this.username}`);
+        console.log(`Username: ${this.sessionId}`);
         this.getPdfs();
       })
   }
@@ -105,7 +104,7 @@ export class UploadPageComponent implements OnInit {
 
   openEditDialog(index: number) {
     const dialogRef = this.dialog.open(EditPdfDialogComponent, {
-      width: '70vw',
+      width: '60vw',
       data: this.pdfArrayData[index] || {}
     })
 
@@ -122,5 +121,5 @@ export class UploadPageComponent implements OnInit {
       })
   }
 
-  user = new UsernameComponent(this.username);
+  // user = new UsernameComponent(this.username);
 }

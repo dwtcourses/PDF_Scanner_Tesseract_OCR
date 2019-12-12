@@ -5,8 +5,8 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const expressGraphql = require('express-graphql');
 const cors = require('cors');
-const spawn = require('child_process').spawn;
-const pythonProcess = spawn('python', ["../../app.py", arg1, arg2]);
+// const spawn = require('child_process').spawn;
+// const pythonProcess = spawn('python', ["../../app.py", arg1, arg2]);
 
 // App
 const app = express();

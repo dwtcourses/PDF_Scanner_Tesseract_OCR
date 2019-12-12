@@ -11,25 +11,28 @@ export class PdfService {
     private apollo: Apollo
   ) { }
 
-  addPdf(username: string, file: File, description: string, tags: string) {
+  addPdf(sessionId: string, file: File, description: string, tags: string, status: string) {
     const addPdf = gql`
       mutation addPdf(
-        $username: String,
+        $sessionId: String,
         $file: Upload!,
         $description: String,
-        $tags: String
+        $tags: String,
+        $status: String
       ){
         addPdf(
-          username: $username,
+          sessionId: $sessionId,
           file: $file,
           description: $description,
-          tags: $tags
+          tags: $tags,
+          status: $status
         ) {
           id,
           fileLocation,
-          username,
+          sessionId,
           description,
-          tags
+          tags,
+          status
         }
       }
     `;
@@ -37,7 +40,7 @@ export class PdfService {
     return this.apollo.mutate({
       mutation: addPdf,
       variables: {
-        username,
+        sessionId,
         file,
         description,
         tags
