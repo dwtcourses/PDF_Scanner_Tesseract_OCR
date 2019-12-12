@@ -56,6 +56,12 @@ class Pdf(base):
     createdAt = Column(Date)
     updatedAt = Column(Date)
     status = Column(String)
+ 
+def readArgs():
+    lines = sys.argv
+    print(f"Arguments: {lines}")
+    
+readArgs()    
     
 def getPdfs(fileformat: str):
     ''' Function to query all files in the "Pdfs" table 
@@ -83,9 +89,9 @@ def getPdfs(fileformat: str):
 
         print(f"ID: {id} || Session ID: {sessionId} || File location: {fileLocation} || description: {description} || tags: {tags} || Created at: {createdAt} || Updated at: {updatedAt} || Status: {status} \n")
     
-getPdfs('py')
+getPdfs('png')
 
-def main(sessionId):
+def main(sessionId, filename):
     ''' Main function 
     
     Application: Perform OCR text extraction and NLP analysis for user input file.  

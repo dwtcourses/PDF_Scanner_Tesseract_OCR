@@ -53,8 +53,8 @@ export const addPdf = async (args) => {
         mode: 'text',
         encoding: 'utf-8',
         pythonOptions: ['-u'],
-        scriptPath: 'C:\\Users\\Administrator\\Desktop\\Eric\\pytesseract\\app.py'
-        
+        scriptPath: 'C:\\Users\\Administrator\\Desktop\\Eric\\pytesseract\\',
+        args: [sessionId, filename]
     };
     
     const entities = pyshell.PythonShell.run('app.py', options, (err, results) => {
@@ -62,7 +62,6 @@ export const addPdf = async (args) => {
         console.log('Results: %j', results);
         return results;
     });
-
     return pdf;
 }
 
