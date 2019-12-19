@@ -60,10 +60,10 @@ export class UploadPageComponent implements OnInit {
   }
 
   save(uploadForm: NgForm) {
-    const uid = uuid.v4();
-    this.sessionId = uid;
+    const uid = uuid.v4();    // Generate random 
+    this.sessionId = uid;     
     this.status = "CREATED";
-    
+
     if (uploadForm.invalid || !this.pdfData.file) { return; }
     
     const {

@@ -18,7 +18,8 @@ import {
   addPdf,
   editPdf,
   deletePdf,
-  searchPdfs
+  searchPdfs,
+  // entities
 } from './graphql/resolvers'
 import { graphqlUploadExpress } from 'graphql-upload'
 
@@ -28,7 +29,8 @@ const root = {
   addPdf,
   editPdf,
   deletePdf,
-  searchPdfs
+  searchPdfs,
+  // entities
 }
 
 // view engine setup

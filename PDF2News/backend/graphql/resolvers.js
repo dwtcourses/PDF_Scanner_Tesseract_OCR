@@ -53,16 +53,31 @@ export const addPdf = async (args) => {
         mode: 'text',
         encoding: 'utf-8',
         pythonOptions: ['-u'],
-        scriptPath: 'C:\\Users\\Administrator\\Desktop\\Eric\\pytesseract\\',
-        args: [sessionId, filename]
+        scriptPath: 'C:\\Users\\Administrator\\Desktop\\Eric\\pytesseract\\PDF2News\\backend\\graphql\\',
+        args: [sessionId, filename, tags]
     };
     
+    // Execute python script from Node.js via python-shell
     const entities = pyshell.PythonShell.run('app.py', options, (err, results) => {
         if (err) throw err;
-        console.log('Results: %j', results);
+        
+        // array.prototype.entries()
+        // for (const [index, element] of results.entries()) {
+        //     console.log(`Iteration: ${index} --> Value: ${element}`);
+        // }
+
+        // array.prototype.map()
+        results.map((value, index) => console.log(`Iteration: ${index} ---> Value: ${value}`))
+
         return results;
     });
-    return pdf;
+
+    // 
+
+    return {
+        pdf,
+        entities
+    };
 }
 
 
